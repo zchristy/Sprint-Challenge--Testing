@@ -193,4 +193,73 @@ describe('server', () => {
 
   })
 
+  describe('DELETE /api/teams/:id', () => {
+
+    it('responds with 200 OK', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+
+      const id = 1
+
+      await supertest(server)
+        .delete(`/api/games/${id}`)
+        .expect(200)
+    })
+
+    it('responds with 404 when invalid id', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+
+      const id = 2
+
+      await supertest(server)
+        .delete(`/api/games/${id}`)
+        .expect(404)
+    })
+
+    it('responds with delete message', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+
+      const id = 1
+
+      await supertest(server)
+      .delete(`/api/games/${id}`)
+      .then(res => {
+        expect(res.body).toEqual({message: "Your game has been deleted"})
+      })
+    })
+
+  })
+
 })
