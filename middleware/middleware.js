@@ -1,6 +1,8 @@
+const model = require('../models/models.js')
 
 module.exports = {
-  validateGame
+  validateGame,
+  validateGameId,
 };
 
 function validateGame(req, res, next) {
@@ -19,5 +21,23 @@ function validateGame(req, res, next) {
   } else {
     res.status(400).json({ message: "missing game data" })
   }
+
+};
+
+function validateGameId(req, res, next) {
+  const { id } = req.params
+
+    model.findById(id)
+    .then(game => {
+      if(game) {
+        req.gameId = game.id
+        next()
+      } else {
+        res.status(404).json({ message: "invalid game id" })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({error: "Internal Server Error"})
+    })
 
 };

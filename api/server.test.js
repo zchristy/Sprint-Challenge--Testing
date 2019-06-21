@@ -75,9 +75,6 @@ describe('server', () => {
   })
 
   describe('POST /api/games', () => {
-    beforeEach(async () => {
-      await db('games').truncate()
-    })
 
     it('responds with 201 CREATED', async () => {
       const game = {
@@ -121,6 +118,76 @@ describe('server', () => {
         .send(game)
         .then(res => {
           expect(res.body.name).toEqual(game.name)
+        })
+    })
+
+  })
+
+  describe('GET /api/games/:id', () => {
+
+    it('responds with 200 OK', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+
+      const id = 1
+
+      await supertest(server)
+        .get(`/api/games/${id}`)
+        .expect(200)
+    })
+
+    it('responds with 404 with invalid id', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+
+      const id = 2
+
+      await supertest(server)
+        .get(`/api/games/${id}`)
+        .expect(404)
+    })
+
+    it('responds specific game by id', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+
+      const id = 1
+
+      const found = await findById(id)
+      await supertest(server)
+        .get(`/api/games/${id}`)
+        .then(res => {
+          expect(res.body).toEqual(found)
         })
     })
 

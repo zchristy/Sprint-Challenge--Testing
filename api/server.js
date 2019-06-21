@@ -22,7 +22,7 @@ server.get('/api/games', (req, res) => {
     });
 });
 
-server.get('/api/games/:id', (req, res) => {
+server.get('/api/games/:id', mw.validateGameId, (req, res) => {
   const { id } = req.params
 
   games.findById(id)
@@ -57,7 +57,7 @@ server.put('/api/games/:id', (req, res) => {
     });
 });
 
-server.delete('/api/games/:id', (req, res) => {
+server.delete('/api/games/:id', mw.validateGameId, (req, res) => {
   const { id } = req.params
 
   games.remove(id)
