@@ -1,3 +1,4 @@
+const db = require('../data/dbConfig.js');
 const model = require('../models/models.js')
 
 module.exports = {

@@ -4,6 +4,7 @@ module.exports = {
   add,
   find,
   findById,
+  findBy,
   remove,
   update
 };
@@ -16,6 +17,11 @@ function findById(id) {
   return db('games')
     .where({ id })
     .first();
+}
+
+function findBy(filter) {
+  return db('games')
+  .where(filter)
 }
 
 async function add(game) {

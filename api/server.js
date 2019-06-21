@@ -41,7 +41,11 @@ server.post('/api/games', mw.validateGame, (req, res) => {
       res.status(201).json(game);
     })
     .catch(error => {
-      res.status(500).json(error.message);
+      if(error.errno === 19) {
+        res.status(405).json({message: "Not Allowed"});
+      } else {
+        res.status(500).json(error.message);
+      }
     });
 });
 

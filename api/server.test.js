@@ -91,6 +91,28 @@ describe('server', () => {
         .expect(201)
     })
 
+    it('responds with 405 when game title already exists', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+
+        await supertest(server)
+          .post(`/api/games`)
+          .send(game)
+          .set('Accept', 'application/json')
+          .expect('Content-Type', /json/)
+          .expect(405)
+    })
+
     it('responds with 422 when information is incomplete', async () => {
       const game = {
         tite: 'Zelda',
