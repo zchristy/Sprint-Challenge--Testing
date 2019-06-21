@@ -6,19 +6,19 @@ exports.seed = function(knex, Promise) {
       // Inserts seed entries
       return knex('games').insert([
         {
-          title: 'Tango and Cash',
+          title: 'Sonic The Hedgehog',
           genre: 'Action',
-          releaseYear: 1987
+          releaseYear: 1995
         },
         {
-          title: 'Chitty Chitty Bang Bang',
-          genre: 'Comedy',
-          releaseYear: 1968
+          title: 'Zelda',
+          genre: 'Adventure',
+          releaseYear: 2001
         },
         {
-          title: 'The Pink Panther',
-          genre: '',
-          releaseYear: 1963
+          title: 'James Bond, Golden Eye',
+          genre: 'Action',
+          releaseYear: 2002
         }
       ]);
     });
