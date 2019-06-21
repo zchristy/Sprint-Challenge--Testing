@@ -2,6 +2,8 @@ const express = require('express');
 
 const games = require('../models/models.js');
 
+const mw = require('../middleware/middleware.js')
+
 const server = express();
 
 server.use(express.json());
@@ -32,14 +34,14 @@ server.get('/api/games/:id', (req, res) => {
     });
 });
 
-server.post('/api/games', (req, res) => {
+server.post('/api/games', mw.validateGame, (req, res) => {
 
-  games.add(req.body)
+  games.add(req.game)
     .then(game => {
       res.status(201).json(game);
     })
     .catch(error => {
-      res.status(500).json(error);
+      res.status(500).json(error.message);
     });
 });
 

@@ -3,6 +3,7 @@ const supertest = require('supertest')
 const server = require('./server.js')
 
 const db = require('../data/dbConfig.js')
+const { validateGame } = require('../middleware/middleware.js')
 const { find, findById, add, update, remove } = require('../models/models.js')
 
 describe('server', () => {
@@ -68,6 +69,58 @@ describe('server', () => {
         .then(res => {
           expect(res.body).toEqual(gamesList)
           expect(res.body).toHaveLength(3)
+        })
+    })
+
+  })
+
+  describe('POST /api/games', () => {
+    beforeEach(async () => {
+      await db('games').truncate()
+    })
+
+    it('responds with 201 CREATED', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(201)
+    })
+
+    it('responds with 422 when information is incomplete', async () => {
+      const game = {
+        tite: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`, validateGame)
+        .send(game)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(422)
+    })
+
+    it('responds with posted game', async () => {
+      const game = {
+        title: 'Zelda',
+        genre: 'Adventure',
+        releaseYear: 2001
+      }
+
+      await supertest(server)
+        .post(`/api/games`)
+        .send(game)
+        .then(res => {
+          expect(res.body.name).toEqual(game.name)
         })
     })
 
